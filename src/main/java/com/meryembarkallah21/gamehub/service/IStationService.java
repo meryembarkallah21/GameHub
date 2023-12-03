@@ -22,4 +22,9 @@ public interface IStationService {
     byte[] getStationPhotoByStationId(Long stationId) throws SQLException, ResourceNotFoundException;
 
     void deleteStation(Long stationId);
+
+    Station updateStation(Long stationId, String stationType, BigDecimal stationPrice, byte[] photoBytes);
+
+    Optional<Station> getStationById(Long stationId);
+
 }

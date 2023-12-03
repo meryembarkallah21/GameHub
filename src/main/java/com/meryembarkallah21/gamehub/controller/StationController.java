@@ -1,6 +1,7 @@
 package com.meryembarkallah21.gamehub.controller;
 
 import com.meryembarkallah21.gamehub.exception.PhotoRetrievalException;
+import com.meryembarkallah21.gamehub.exception.ResourceNotFoundException;
 import com.meryembarkallah21.gamehub.model.BookedStation;
 import com.meryembarkallah21.gamehub.model.Station;
 import com.meryembarkallah21.gamehub.response.BookingResponse;
@@ -88,10 +89,7 @@ public class StationController {
 
 
 
-
-
-   /* @PutMapping("/update/{stationId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/update/{stationId}")
     public ResponseEntity<StationResponse> updateStation(@PathVariable Long stationId,
                                                    @RequestParam(required = false)  String stationType,
                                                    @RequestParam(required = false) BigDecimal stationPrice,
@@ -103,8 +101,16 @@ public class StationController {
         theStation.setPhoto(photoBlob);
         StationResponse stationResponse = getStationResponse(theStation);
         return ResponseEntity.ok(stationResponse);
-    }*/
+    }
 
+    @GetMapping("/station/{stationId}")
+    public ResponseEntity<Optional<StationResponse>> getStationById(@PathVariable Long stationId){
+        Optional<Station> theStation = stationService.getStationById(stationId);
+        return theStation.map(station -> {
+            StationResponse stationResponse = getStationResponse(station);
+            return  ResponseEntity.ok(Optional.of(stationResponse));
+        }).orElseThrow(() -> new ResourceNotFoundException("Station not found"));
+    }
 
 
     private StationResponse getStationResponse(Station station) {

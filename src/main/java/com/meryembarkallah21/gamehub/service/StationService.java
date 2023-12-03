@@ -85,5 +85,25 @@ public class StationService implements IStationService
 
     }
 
+    @Override
+    public Station updateStation(Long stationId, String stationType, BigDecimal stationPrice, byte[] photoBytes) {
+        Station station = stationRepository.findById(stationId).get();
+        if (stationType != null) station.setStationType(stationType);
+        if (stationPrice != null) station.setStationPrice(stationPrice);
+        if (photoBytes != null && photoBytes.length > 0) {
+            try {
+                station.setPhoto(new SerialBlob(photoBytes));
+            } catch (SQLException ex) {
+                throw new InternalServerException("Fail updating station");
+            }
+        }
+        return stationRepository.save(station);
+    }
+
+    @Override
+    public Optional<Station> getStationById(Long stationId) {
+        return Optional.of(stationRepository.findById(stationId).get());
+    }
+
 
 }
