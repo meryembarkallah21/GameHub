@@ -78,6 +78,35 @@ public class StationController {
 
 
 
+
+
+    @DeleteMapping("/delete/station/{stationId}")
+    public ResponseEntity<Void> deleteStation(@PathVariable Long stationId){
+        stationService.deleteStation(stationId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+
+
+
+   /* @PutMapping("/update/{stationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<StationResponse> updateStation(@PathVariable Long stationId,
+                                                   @RequestParam(required = false)  String stationType,
+                                                   @RequestParam(required = false) BigDecimal stationPrice,
+                                                   @RequestParam(required = false) MultipartFile photo) throws SQLException, IOException {
+        byte[] photoBytes = photo != null && !photo.isEmpty() ?
+                photo.getBytes() : stationService.getStationPhotoByStationId(stationId);
+        Blob photoBlob = photoBytes != null && photoBytes.length >0 ? new SerialBlob(photoBytes): null;
+        Station theStation = stationService.updateStation(stationId, stationType, stationPrice, photoBytes);
+        theStation.setPhoto(photoBlob);
+        StationResponse stationResponse = getStationResponse(theStation);
+        return ResponseEntity.ok(stationResponse);
+    }*/
+
+
+
     private StationResponse getStationResponse(Station station) {
         List<BookedStation> bookings = getAllBookingsByStationId(station.getId());
         /*List<BookingResponse> bookingInfo = bookings

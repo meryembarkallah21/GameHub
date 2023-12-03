@@ -76,5 +76,14 @@ public class StationService implements IStationService
         return null;
     }
 
+    @Override
+    public void deleteStation(Long stationId) {
+        Optional<Station> theStation = stationRepository.findById(stationId);
+        if(theStation.isPresent()){
+            stationRepository.deleteById(stationId);
+        }
+
+    }
+
 
 }

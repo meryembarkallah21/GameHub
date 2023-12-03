@@ -20,4 +20,6 @@ public interface IStationService {
     List<Station> getAllStations();
 
     byte[] getStationPhotoByStationId(Long stationId) throws SQLException, ResourceNotFoundException;
+
+    void deleteStation(Long stationId);
 }
