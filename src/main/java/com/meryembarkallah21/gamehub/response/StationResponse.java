@@ -27,12 +27,11 @@ public class StationResponse {
     }
 
     public StationResponse(Long id, String stationType, BigDecimal stationPrice, boolean isBooked,
-                        byte[] photoBytes , List<BookingResponse> bookings) {
+                        byte[] photoBytes) {
         this.id = id;
         this.stationType = stationType;
         this.stationPrice = stationPrice;
         this.isBooked = isBooked;
-        this.photo = photoBytes != null ? Base64.encodeBase64String(photoBytes) : null;
-        this.bookings = bookings;
+        this.photo = photoBytes != null ? Base64.encodeBase64String(photoBytes) : null;this.bookings = bookings;
     }
 }

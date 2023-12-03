@@ -1,8 +1,13 @@
 package com.meryembarkallah21.gamehub.controller;
 
+import com.meryembarkallah21.gamehub.exception.PhotoRetrievalException;
+import com.meryembarkallah21.gamehub.model.BookedStation;
 import com.meryembarkallah21.gamehub.model.Station;
+import com.meryembarkallah21.gamehub.response.BookingResponse;
 import com.meryembarkallah21.gamehub.response.StationResponse;
+import com.meryembarkallah21.gamehub.service.BookingService;
 import com.meryembarkallah21.gamehub.service.IStationService;
+import lombok.RequiredArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,15 +25,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/stations")
+@CrossOrigin(origins = "http://localhost:5173") // Replace with your frontend's URL
+
 public class StationController {
 
 
     private final IStationService stationService;
+    private final BookingService bookingService;
 
 
 
@@ -44,5 +54,54 @@ public class StationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/station/types")
+    public List<String> getStationTypes() {
+
+        return stationService.getAllStationTypes();
+    }
+
+    @GetMapping("/all-stations")
+    public ResponseEntity<List<StationResponse>> getAllStations() throws SQLException {
+        List<Station> stations = stationService.getAllStations();
+        List<StationResponse> stationResponses = new ArrayList<>();
+        for (Station station : stations) {
+            byte[] photoBytes = stationService.getStationPhotoByStationId(station.getId());
+            if (photoBytes != null && photoBytes.length > 0) {
+                String base64Photo = Base64.encodeBase64String(photoBytes);
+                StationResponse stationResponse = getStationResponse(station);
+                stationResponse.setPhoto(base64Photo);
+                stationResponses.add(stationResponse);
+            }
+        }
+        return ResponseEntity.ok(stationResponses);
+    }
+
+
+
+    private StationResponse getStationResponse(Station station) {
+        List<BookedStation> bookings = getAllBookingsByStationId(station.getId());
+        /*List<BookingResponse> bookingInfo = bookings
+                .stream()
+                .map(booking -> new BookingResponse(booking.getBookingId(),
+                        booking.getCheckInDate(),
+                        booking.getCheckOutDate(), booking.getBookingConfirmationCode())).toList();*/
+        byte[] photoBytes = null;
+        Blob photoBlob = station.getPhoto();
+        if (photoBlob != null) {
+            try {
+                photoBytes = photoBlob.getBytes(1, (int) photoBlob.length());
+            } catch (SQLException e) {
+                throw new PhotoRetrievalException("Error retrieving photo");
+            }
+        }
+        return new StationResponse(station.getId(),
+                station.getStationType(), station.getStationPrice(),
+                station.isBooked(), photoBytes);
+    }
+
+    private List<BookedStation> getAllBookingsByStationId(Long stationId) {
+        return bookingService.getAllBookingsByStationId(stationId);
+
+    }
 
 }
