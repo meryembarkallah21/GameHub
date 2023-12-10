@@ -35,11 +35,11 @@ public class BookedStation {
     @Column(name = "guest_email")
     private String guestEmail;
 
-    @Column(name = "console-gamers")
-    private int NumOfConsoleGamers;
-
     @Column(name = "pc_gamers")
     private int NumOfPcGamers;
+
+    @Column(name = "console-gamers")
+    private int NumOfConsoleGamers;
 
 
     @Column(name = "total_guest")

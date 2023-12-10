@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/stations")
-@CrossOrigin(origins = "http://localhost:5173") // Replace with your frontend's URL
+@CrossOrigin(origins = "http://localhost:5173")
 
 public class StationController {
 
@@ -115,11 +115,11 @@ public class StationController {
 
     private StationResponse getStationResponse(Station station) {
         List<BookedStation> bookings = getAllBookingsByStationId(station.getId());
-        /*List<BookingResponse> bookingInfo = bookings
+        List<BookingResponse> bookingInfo = bookings
                 .stream()
                 .map(booking -> new BookingResponse(booking.getBookingId(),
                         booking.getCheckInDate(),
-                        booking.getCheckOutDate(), booking.getBookingConfirmationCode())).toList();*/
+                        booking.getCheckOutDate(), booking.getBookingConfirmationCode())).toList();
         byte[] photoBytes = null;
         Blob photoBlob = station.getPhoto();
         if (photoBlob != null) {
