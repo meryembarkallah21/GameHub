@@ -50,7 +50,7 @@ public class BookingController {
         }
     }
 
-   /* @GetMapping("/confirmation/{confirmationCode}")
+   @GetMapping("/confirmation/{confirmationCode}")
     public ResponseEntity<?> getBookingByConfirmationCode(@PathVariable String confirmationCode){
         try{
             BookedStation booking = bookingService.findByBookingConfirmationCode(confirmationCode);
@@ -61,6 +61,8 @@ public class BookingController {
         }
     }
 
+
+     /*
     @GetMapping("/user/{email}/bookings")
     public ResponseEntity<List<BookingResponse>> getBookingsByUserEmail(@PathVariable String email) {
         List<BookedStation> bookings = bookingService.getBookingsByUserEmail(email);
