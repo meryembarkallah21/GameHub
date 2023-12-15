@@ -139,4 +139,28 @@ public class StationController {
 
     }
 
+
+    @GetMapping("/available-stations")
+    public ResponseEntity<List<StationResponse>> getAvailableStations(
+            @RequestParam("checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate checkInDate,
+            @RequestParam("checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate checkOutDate,
+            @RequestParam("stationType") String stationType) throws SQLException {
+        List<Station> availableStations = stationService.getAvailableStations(checkInDate, checkOutDate, stationType);
+        List<StationResponse> stationResponses = new ArrayList<>();
+        for (Station station : availableStations){
+            byte[] photoBytes = stationService.getStationPhotoByStationId(station.getId());
+            if (photoBytes != null && photoBytes.length > 0){
+                String photoBase64 = Base64.encodeBase64String(photoBytes);
+                StationResponse stationResponse = getStationResponse(station);
+                stationResponse.setPhoto(photoBase64);
+                stationResponses.add(stationResponse);
+            }
+        }
+        if(stationResponses.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.ok(stationResponses);
+        }
+    }
+
 }

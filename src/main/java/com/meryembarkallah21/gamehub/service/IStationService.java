@@ -27,4 +27,5 @@ public interface IStationService {
 
     Optional<Station> getStationById(Long stationId);
 
+    List<Station> getAvailableStations(LocalDate checkInDate, LocalDate checkOutDate, String stationType);
 }

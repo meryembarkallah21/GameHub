@@ -105,5 +105,10 @@ public class StationService implements IStationService
         return Optional.of(stationRepository.findById(stationId).get());
     }
 
+    @Override
+    public List<Station> getAvailableStations(LocalDate checkInDate, LocalDate checkOutDate, String stationType) {
+        return stationRepository.findAvailableStationsByDatesAndType(checkInDate, checkOutDate, stationType);
+    }
+
 
 }
