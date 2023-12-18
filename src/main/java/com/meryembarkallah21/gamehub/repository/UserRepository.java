@@ -1,0 +1,18 @@
+package com.meryembarkallah21.gamehub.repository;
+
+
+import com.meryembarkallah21.gamehub.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long>{
+
+    boolean existsByEmail(String email);
+
+    void deleteByEmail(String email);
+
+    Optional<User> findByEmail(String email);
+
+
+}

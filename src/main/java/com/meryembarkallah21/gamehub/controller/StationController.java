@@ -9,11 +9,11 @@ import com.meryembarkallah21.gamehub.response.StationResponse;
 import com.meryembarkallah21.gamehub.service.BookingService;
 import com.meryembarkallah21.gamehub.service.IStationService;
 import lombok.RequiredArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,15 +26,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/stations")
-@CrossOrigin(origins = "http://localhost:5173")
-
 public class StationController {
 
 
@@ -45,6 +42,7 @@ public class StationController {
 
     //n7otou http method
     @PostMapping("/add/new-station")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<StationResponse> addNewStation(
             @RequestParam("photo") MultipartFile photo,
             @RequestParam("stationType") String stationType,
@@ -82,6 +80,7 @@ public class StationController {
 
 
     @DeleteMapping("/delete/station/{stationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteStation(@PathVariable Long stationId){
         stationService.deleteStation(stationId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -90,6 +89,7 @@ public class StationController {
 
 
     @PutMapping("/update/{stationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<StationResponse> updateStation(@PathVariable Long stationId,
                                                    @RequestParam(required = false)  String stationType,
                                                    @RequestParam(required = false) BigDecimal stationPrice,
